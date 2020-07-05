@@ -47,9 +47,21 @@ httpApp.use(function (req, res, next) {
 });
 httpApp.use('/', router);
 
-Mongoose = require('mongoose');
-Mongoose.connect(ENV.DB_CONN, {useNewUrlParser: true, useUnifiedTopology: true});
 
+mongoose = require('mongoose');
+async function loadDatabase() {
+  await mongoose.connect(ENV.DB_CONN, {useNewUrlParser: true, useUnifiedTopology: true});
+}
+
+async function initServer() {
+  await loadDatabase();
+
+  require("./app/controllers/feed")(router);
+  require("./app/controllers/posts")(router);
+
+  const httpServer = http.createServer(httpApp).listen(ENV.PORT);
+  console.log("Listening on port:", ENV.PORT);
+}
+
+initServer();
 // Start server.
-const httpServer = http.createServer(httpApp).listen(ENV.PORT);
-console.log("Listening on port:", ENV.PORT);
