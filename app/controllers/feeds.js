@@ -1,5 +1,5 @@
 module.exports = function(router) {
-  router.get("/feed", function(req, res) {
+  router.get("/feeds", function(req, res) {
     res.send({feed: []});
   });
 };

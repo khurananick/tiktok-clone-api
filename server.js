@@ -48,15 +48,16 @@ httpApp.use(function (req, res, next) {
 httpApp.use('/', router);
 
 
-mongoose = require('mongoose');
 async function loadDatabase() {
+  const mongoose = require('mongoose');
   await mongoose.connect(ENV.DB_CONN, {useNewUrlParser: true, useUnifiedTopology: true});
 }
 
 async function initServer() {
   await loadDatabase();
 
-  require("./app/controllers/feed")(router);
+  require("./app/controllers/users")(router);
+  require("./app/controllers/feeds")(router);
   require("./app/controllers/posts")(router);
 
   const httpServer = http.createServer(httpApp).listen(ENV.PORT);
@@ -64,4 +65,3 @@ async function initServer() {
 }
 
 initServer();
-// Start server.
