@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 
 const postSchema = new mongoose.Schema({
+  userId: String,
   type: String
-});
+}, { timestamps: true });
 
 const PostModel = mongoose.model('Post', postSchema);
 

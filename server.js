@@ -45,6 +45,10 @@ httpApp.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin',  '*');
   next();
 });
+httpApp.use(function (req, res, next) {
+  console.log(req.method, req.url);
+  next();
+});
 httpApp.use('/', router);
 
 
@@ -59,6 +63,7 @@ async function initServer() {
   require("./app/controllers/users")(router);
   require("./app/controllers/feeds")(router);
   require("./app/controllers/posts")(router);
+  require("./app/controllers/comments")(router);
 
   const httpServer = http.createServer(httpApp).listen(ENV.PORT);
   console.log("Listening on port:", ENV.PORT);
