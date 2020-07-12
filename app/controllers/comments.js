@@ -33,19 +33,28 @@ module.exports = function(router) {
     });
   });
 
-  router.get("/comments/:id", async function(req, res) {
-    const comment = await CommentModel.find({ _id: req.params.id });
-    res.send(comment);
-  });
-
   router.post("/comments", async function(req, res) {
-    const post = {};
-    const comment = await CommentModel.save({
-      commenterId: req.body.user_id,
-      postOwnerId: post.userId,
-      postId: post.id,
-      text: req.body.text
+    if(!AUTHEDUSER) return UNAUTHEDERROR(res);
+
+    const PostModel = require("../models/post");
+    const post = await PostModel.findOne({ _id: req.body.post_id });
+    if(!post)
+      return res.send('INVALID_POST');
+
+    const msg = new CommentModel({
+      text: req.body.text,
+      commenter: AUTHEDUSER
     });
-    res.send(comment);
+    const doc = await msg.save().catch(function(e) {
+      return { error: e };
+    });
+    if(doc.error)
+      return res.send(doc);
+
+    post.commentsCount += 1;
+    post.comments.push(msg);
+    await post.save();
+
+    res.send({ success: true, comment_id: doc._id });
   });
 };

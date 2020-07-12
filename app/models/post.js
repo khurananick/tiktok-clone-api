@@ -16,19 +16,19 @@ const postSchema = new Schema({
     type: String,
     required: true
   },
-  likes: {
+  likesCount: {
     type: Number,
     default: 0,
   },
-  likers: [{
+  likes: [{
     type: Schema.Types.ObjectId,
-    ref: "User"
+    ref: "Like"
   }],
-  comments: {
+  commentsCount: {
     type: Number,
     default: 0
   },
-  commenters: [{
+  comments: [{
     type: Schema.Types.ObjectId,
     ref: "Comment"
   }]

@@ -20,7 +20,8 @@ const userSchema = new Schema({
     sparse: true
   },
   authToken: {
-    type: String
+    type: String,
+    select: false
   }
 }, { timestamps: true });
 

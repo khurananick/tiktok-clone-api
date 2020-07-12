@@ -12,8 +12,8 @@ ENV                 = require('dotenv').config().parsed;
 FS                  = require('fs');
 STATIC_DIR          = (__dirname + "/static");
 AUTHEDUSER          = null;
-UNAUTHEDERROR       = function(res, body) {
-  return res.send(body);
+UNAUTHEDERROR       = function(res) {
+  return res.send({ error: "UNKOWN_USER" });
 }
 
 // HTTP server settings
