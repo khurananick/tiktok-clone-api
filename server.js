@@ -10,6 +10,7 @@ const path          = require('path');
 ENV                 = require('dotenv').config().parsed;
 FS                  = require('fs');
 STATIC_DIR          = (__dirname + "/static");
+UPLOADS_DIR         = (__dirname + "/uploads");
 AUTHEDUSER          = null;
 UNAUTHEDERROR       = function(res) {
   return res.send({ error: "UNKOWN_USER" });
@@ -20,13 +21,8 @@ const httpApp       = express();
 const router        = express.Router();
 httpApp.set('views', __dirname + "/app/views");
 httpApp.set('view engine', 'pug');
-httpApp.use(express.static(STATIC_DIR,{
-  setHeaders: function(res, path) {
-    res.setHeader('Access-Control-Allow-Headers', 'accept, authorization, content-type, x-requested-with');
-    res.setHeader('Access-Control-Allow-Methods', '*');
-    res.setHeader('Access-Control-Allow-Origin',  '*');
-  }
-}));
+httpApp.use(express.static(STATIC_DIR));
+httpApp.use('/uploads', express.static(UPLOADS_DIR));
 httpApp.use(bodyParser.json({limit: '50mb', parameterLimit: 10000}));
 httpApp.use(bodyParser.urlencoded({limit: '50mb', parameterLimit: 10000, extended: true}));
 httpApp.use(cookieParser());
@@ -91,7 +87,6 @@ async function initServer() {
   require("./app/controllers/feeds")(router);
   require("./app/controllers/posts")(router);
   require("./app/controllers/comments")(router);
-  require("./app/controllers/uploads")(router);
 
   const httpServer = http.createServer(httpApp).listen(ENV.PORT);
   console.log("Listening on port:", ENV.PORT);
