@@ -1,4 +1,6 @@
 *.swp
 .env
 package-lock.json
-/node_modules
+secret.json
+node_modules
+uploads

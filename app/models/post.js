@@ -6,13 +6,15 @@ const postSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
   },
+  username: String,
   tags: Array,
+  music: String,
   description: String,
   type: {
     type: String,
     default: "video"
   },
-  assetUri: {
+  uri: {
     type: String,
     required: true
   },

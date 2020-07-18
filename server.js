@@ -3,7 +3,6 @@ const http          = require("http");
 const express       = require("express");
 const bodyParser    = require('body-parser');
 const cookieParser  = require('cookie-parser');
-const multer        = require('multer');
 const session       = require('express-session');
 const path          = require('path');
 
@@ -21,7 +20,6 @@ const httpApp       = express();
 const router        = express.Router();
 httpApp.set('views', __dirname + "/app/views");
 httpApp.set('view engine', 'pug');
-httpApp.use(multer({dest:'./uploads/'}).single('file'));
 httpApp.use(express.static(STATIC_DIR,{
   setHeaders: function(res, path) {
     res.setHeader('Access-Control-Allow-Headers', 'accept, authorization, content-type, x-requested-with');
@@ -93,6 +91,7 @@ async function initServer() {
   require("./app/controllers/feeds")(router);
   require("./app/controllers/posts")(router);
   require("./app/controllers/comments")(router);
+  require("./app/controllers/uploads")(router);
 
   const httpServer = http.createServer(httpApp).listen(ENV.PORT);
   console.log("Listening on port:", ENV.PORT);

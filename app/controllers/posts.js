@@ -1,5 +1,7 @@
 module.exports = function(router) {
   const PostModel = require("../models/post");
+  const Multer    = require('multer');
+  const Upload    = Multer({ dest: "uploads/", preservePath: true});
 
   router.get("/posts", async function(req, res) {
     if(!AUTHEDUSER) return UNAUTHEDERROR(res);
@@ -14,12 +16,16 @@ module.exports = function(router) {
     res.send(posts);
   });
 
-  router.post("/posts", async function(req, res) {
+  router.post("/posts", Upload.single("video"), async function(req, res) {
     if(!AUTHEDUSER) return UNAUTHEDERROR(res);
 
+    const newfilename = `${req.file.path}.${req.file.originalname.split('.')[1]}`; // adds extension to multer file name
+    const file = FS.renameSync(req.file.path, newfilename);
+
     const msg = new PostModel({
+      username: AUTHEDUSER.username,
       tags: req.body.tags.split(","),
-      assetUri: req.body.uri,
+      uri: newfilename,
       type: "video",
       owner: AUTHEDUSER
     });
